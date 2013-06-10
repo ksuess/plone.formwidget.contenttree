@@ -80,8 +80,6 @@ class Preview(BaseView):
         navtree_query = source.navigation_tree_query.copy()
         navtree_query['path'] = {'query': directory}
 
-        if 'is_default_page' not in navtree_query:
-            navtree_query['is_default_page'] = False
         if True in navtree_query['is_default_page'] and False in navtree_query['is_default_page']:
             del navtree_query['is_default_page']
 
@@ -141,8 +139,6 @@ class Fetch(BaseView):
         if directory is not None:
             navtree_query['path'] = {'depth': 1, 'query': directory}
 
-        if 'is_default_page' not in navtree_query:
-            navtree_query['is_default_page'] = False
         if True in navtree_query['is_default_page'] and False in navtree_query['is_default_page']:
             del navtree_query['is_default_page']
 
