@@ -82,7 +82,7 @@ class Preview(BaseView):
 
         if 'is_default_page' not in navtree_query:
             navtree_query['is_default_page'] = False
-        if navtree_query['is_default_page'] in [(True,False), (False, True)]:
+        if navtree_query['is_default_page'] == (True,False):
             del navtree_query['is_default_page']
 
         content = context
@@ -91,6 +91,23 @@ class Preview(BaseView):
 
         catalog = getToolByName(content, 'portal_catalog')
         results = catalog(navtree_query)
+        
+        
+        # debug
+        print
+        print "Preview"
+        print navtree_query
+        print "len(results)", len(results)
+        for item in [ True, False, (True,False)]:
+            navtree_query['Language'] = 'all'
+            navtree_query['is_default_page'] = item
+            rs = catalog(navtree_query)
+            print item, len(rs), navtree_query
+        navtree_query['Language'] = 'all'
+        del navtree_query['is_default_page']
+        rs = catalog(navtree_query)
+        print "no is_default_page", len(rs), navtree_query
+        
 
         if len(results) > 0:
             obj = results[0].getObject()
@@ -143,7 +160,7 @@ class Fetch(BaseView):
 
         if 'is_default_page' not in navtree_query:
             navtree_query['is_default_page'] = False
-        if navtree_query['is_default_page'] in [(True,False), (False, True)]:
+        if True in navtree_query['is_default_page'] and False in navtree_query['is_default_page']:
             del navtree_query['is_default_page']
 
         content = closest_content(context)
@@ -163,6 +180,26 @@ class Fetch(BaseView):
                 children.append(newNode)
 
         self.request.response.setHeader('X-Theme-Disabled', 'True')
+        
+        
+        
+        
+        # debug
+        print
+        print "Fetch"
+        print navtree_query
+        print "len(results)", len(catalog(navtree_query))
+        for item in [ True, False, (True,False)]:
+            navtree_query['Language'] = 'all'
+            navtree_query['is_default_page'] = item
+            rs = catalog(navtree_query)
+            print item, len(rs), navtree_query
+        navtree_query['Language'] = 'all'
+        del navtree_query['is_default_page']
+        rs = catalog(navtree_query)
+        print "no is_default_page", len(rs), navtree_query
+        
+        
 
         return self.fragment_template(children=children, level=int(level))
 
